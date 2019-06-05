@@ -4,8 +4,7 @@ baseline-collection
 Code to publish HITs on Mechanical Turk to collect human baselines
 
 ## create_tasks.py
-Contains the code for publishing HITs courtesy of the tutorial from aws at https://blog.mturk.com/tutorial-a-beginners-guide-to-crowdsourcing-ml-training-data-with-python-and-mturk-d8df4bdf2977
-
+Contains the code for publishing HITs 
 ## templates
 Contains two files.
 
@@ -13,6 +12,9 @@ Contains two files.
 * **HIT.html** is a general template that is being developed for HITs. The goal is to have this template be pretty bare and it will be filled on based on the required task using Python and Jinja2. 
 
 ---
+
+Both create_tasks.py and questions.xml are courtesy of the tutorial from AWS found at: courtesy of the tutorial from aws at: https://blog.mturk.com/tutorial-a-beginners-guide-to-crowdsourcing-ml-training-data-with-python-and-mturk-d8df4bdf2977
+
 
 Any questions please contact: edcohen@seas.upenn.edu
 
