@@ -9,7 +9,7 @@ Contains the code for publishing HITs courtesy of the tutorial from aws at https
 ## templates
 Contains two files.
 
-* **questions.xml** is the file containing the xml wrapper for the HTML for the HIT. 
+* **questions.xml** is the file containing the xml wrapper and the HTML for the HIT. 
 * **HIT.html** is a general template that is being developed for HITs. The goal is to have this template be pretty bare and it will be filled on based on the required task using Python and Jinja2. 
 
 ---
