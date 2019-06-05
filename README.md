@@ -1,7 +1,7 @@
 baseline-collection
 =======
 
-Code to publish HITs on Mechanical Turk to collect human baselines for NLP tasks. A preview of the HITs can be found at: https://workersandbox.mturk.com/projects/3PJ6380TR3SRI5TCMJADV7G7ARFQFN/tasks?ref=w_pl_prvw
+Code to publish HITs on Mechanical Turk to collect human baselines for NLP tasks. A preview of the HITs can be found at: https://workersandbox.mturk.com/projects/3D3KZYB03KKA8YF604YHR2YT4EPV8B/tasks
 
 ## create_tasks.py
 Contains the code for publishing HITs 
