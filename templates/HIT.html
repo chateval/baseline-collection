@@ -1,0 +1,101 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<!-- You must include crowd-form so that your task submits answers to MTurk -->
+<crowd-form answer-format="flatten-objects">
+
+
+    <!-- Short instructions to appear in the sidebar describing the task for workers to complete --> 
+    <short-instructions>
+        <ol>
+            <li>Read the given context and prompt.</li>
+            <li>Give two unique possible responses to the prompt using natural language.</li>
+        </ol>
+        <p>View full instructions for the acception/rejection policy and two examples.</p>
+    </short-instructions>
+    <full-instructions>
+        <h3>Task:</h3>
+        <p>
+            Given background dialogue and a prompt, write how you would respond to the prompt using natural language. 
+            Please provide two unique responses to the prompt, one in each input box. Don't overthink it, write what you would say if you were in the given situation.
+        </p>
+        <h3>Acception/Rejection Policy:</h3>
+        <p>
+            If the boxes are left blank or are not valid English sentences the work will be rejected. Also, if the responses are not unique the work will be rejected. All other work will be accepted. Below are a positive example and a negative example.
+        </p>
+        <h3>Positive Example:</h3>
+        <h4>Context:</h4>
+        <p>A: Hi, how are you?</p>
+        <p>B: I'm well, how are you?</p>
+        <p>A: I'm ok. Want to go see a movie?</p>
+        <h4>Prompt:</h4>
+        <p>A: I'm ok. Want to go see a movie?</p>
+        <h4>Responses:</h4>
+        <p>Response 1: Sure, I'm free. That new Avengers movie looks good.</p>
+        <p>Response 2: Sorry, I have an appointment.</p>
+        <h3>Negative Example:</h3>
+        <h4>Context:</h4>
+        <p>A: Hi, how are you?</p>
+        <p>B: I'm well, how are you?</p>
+        <p>A: I'm ok. Want to go see a movie?</p>
+        <h4>Prompt:</h4>
+        <p>A: I'm ok. Want to go see a movie?</p>
+        <h4>Responses:</h4>
+        <p>Response 1: .</p>
+        <p>Response 2: aaaa.</p>
+    </full-instructions>  
+    <crowd-instructions link-text="View instructions" link-type="button">
+        <short-summary>
+            <ol>
+                <li>Read the given context and prompt</li>
+                <li>Give two unique responses, one in each input box, to the prompt using natural language.</li>
+            </ol>
+        </short-summary>
+        <detailed-instructions>
+            <h3>Task:</h3>
+            <p>
+                Given background dialogue and a prompt, write how you would respond to the prompt using natural language. 
+                Please provide two unique responses, one in each input box. Don't overthink it, write what you would say if you were in the given situation.
+            </p>
+            <h3>Acception/Rejection Policy:</h3>
+            <p>
+                If the boxes are left blank or are not valid English sentences the work will be rejected. Also, if the responses are not unique the work will be rejected. All other work will be accepted. See Examples for a positive example and a negative example.
+            </p>
+        </detailed-instructions>
+        <positive-example>
+            <h3>Context:</h3>
+            <p>A: Hi, how are you?</p>
+            <p>B: I'm well, how are you?</p>
+            <p>A: I'm ok. Want to go see a movie?</p>
+            <h3>Prompt:</h3>
+            <p>A: I'm ok. Want to go see a movie?</p>
+            <h3>Responses:</h3>
+            <p>Response 1: Sure, I'm free. That new Avengers movie looks good.</p>
+            <p>Response 2: Sorry, I have an appointment.</p>
+        </positive-example>
+        <negative-example>
+            <h3>Context:</h3>
+            <p>A: Hi, how are you?</p>
+            <p>B: I'm well, how are you?</p>
+            <p>A: I'm ok. Want to go see a movie?</p>
+            <h3>Prompt:</h3>
+            <p>A: I'm ok. Want to go see a movie?</p>
+            <h3>Responses:</h3>
+            <p>Response 1: .</p>
+            <p>Response 2: aaaa.</p>
+        </negative-example>
+    </crowd-instructions>
+    <!-- Your contexts and intents will be substituted for the "context" and "intent" variables when you 
+           publish a batch with an input file containing multiple contexts and intents -->
+
+    <p><strong>Context: </strong></p>
+	{% for turn in context %}
+		<p>{{ turn }}</p>
+	{% endfor %}
+    	
+    <p><strong>Prompt: </strong></p>
+    <p>{{ prompt }}</p>
+
+    <p><strong>Possible Responses:</strong></p>
+    <crowd-input label="Response 1" name="response1" placeholder="Type one possible response here..." required></crowd-input>
+    <crowd-input label="Response 2" name="response2" placeholder="Type another, unique possible response here..." required></crowd-input>
+</crowd-form>

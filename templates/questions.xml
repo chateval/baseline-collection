@@ -1,0 +1,242 @@
+<HTMLQuestion xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2011-11-11/HTMLQuestion.xsd">
+<HTMLContent><![CDATA[
+
+<!-- YOUR HTML BEGINS -->
+<!DOCTYPE html>
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<!-- You must include crowd-form so that your task submits answers to MTurk -->
+<crowd-form answer-format="flatten-objects">
+
+
+    <!-- Short instructions to appear in the sidebar describing the task for workers to complete --> 
+    <short-instructions>
+        <ol>
+            <li>Read the given conversation between A and B.</li>
+            <li>Give at least two unique possible responses to the last turn in the conversation using natural language.</li>
+            <li>Do this for ten different conversations.</li>
+        </ol>
+        <p>View full instructions for the acception/rejection policy and two examples.</p>
+    </short-instructions>
+    <full-instructions>
+        <h3>Task:</h3>
+        <p>
+            Given the conversation write how you would respond in the conversation using natural language. 
+            Please provide two unique responses, one in each input box. Don't overthink it, write what you would say if you were in the given situation. You are asked to do this 10 times. For all 10, at least two responses must be provided for the work to be accepted. 
+        </p>
+        <h3>Acception/Rejection Policy:</h3>
+        <p>
+            If the boxes are left blank or are not valid English sentences the work will be rejected. Also, if the responses are not unique the work will be rejected. All other work will be accepted. Below are a positive example and a negative example.
+        </p>
+        <h3>Positive Example:</h3>
+        <h4>Conversation:</h4>
+        <p>A: Hi, how are you?</p>
+        <p>B: I'm well, how are you?</p>
+        <p>A: I'm ok. Want to go see a movie?</p>
+        <h4>Responses:</h4>
+        <p>Response 1: Sure, I'm free. That new Avengers movie looks good.</p>
+        <p>Response 2: Sorry, I have an appointment.</p>
+        <p>Response 3: Are you asking me on a date? </p>
+        <p>Response 4: Um, I have a boyfriend. </p>
+        <p>Response 5: It's so nice out how about we do something outside?</p>
+        <h3>Negative Example:</h3>
+        <h4>Conversation:</h4>
+        <p>A: Hi, how are you?</p>
+        <p>B: I'm well, how are you?</p>
+        <p>A: I'm ok. Want to go see a movie?</p>
+        <h4>Responses:</h4>
+        <p>Response 1: .</p>
+        <p>Response 2: aaaa.</p>
+        <p>Response 3: aaaa.</p>
+        <p>Reponse 4: </p>
+        <p>Response 5: I do dont not huh want</p>
+    </full-instructions>  
+    <crowd-instructions link-text="View instructions" link-type="button">
+        <short-summary>
+            <ol>
+                <li>Read the given conversation.</li>
+                <li>Give at least two unique responses, up to five, to the last turn, using natural language.</li>
+            </ol>
+        </short-summary>
+        <detailed-instructions>
+            <h3>Task:</h3>
+            <p>
+                Given the conversation, write how you would respond in the conversation using natural language. 
+                Please provide at least two unique responses, one in each input box. For providing more than two responses you will be awarded bonus money of one cent per response. Don't overthink it, write what you would say if you were in the given situation.
+            </p>
+            <h3>Acception/Rejection Policy:</h3>
+            <p>
+                If the first two boxes are left blank or are not valid English sentences the work will be rejected. Also, if the responses are not unique the work will be rejected. All other work will be accepted. See Examples for a positive example and a negative example.
+            </p>
+        </detailed-instructions>
+        <positive-example>
+            <h3>Conversation:</h3>
+            <p>A: Hi, how are you?</p>
+            <p>B: I'm well, how are you?</p>
+            <p>A: I'm ok. Want to go see a movie?</p>
+            <h3>Prompt:</h3>
+            <p>A: I'm ok. Want to go see a movie?</p>
+            <h3>Responses:</h3>
+            <p>Response 1: Sure, I'm free. That new Avengers movie looks good.</p>
+            <p>Response 2: Sorry, I have an appointment.</p>
+            <p>Response 3: Are you asking me on a date? </p>
+            <p>Response 4: Um, I have a boyfriend. </p>
+            <p>Response 5: It's so nice out how about we do something outside?</p>
+        </positive-example>
+        <negative-example>
+            <h3>Conversation:</h3>
+            <p>A: Hi, how are you?</p>
+            <p>B: I'm well, how are you?</p>
+            <p>A: I'm ok. Want to go see a movie?</p>
+            <h3>Prompt:</h3>
+            <p>A: I'm ok. Want to go see a movie?</p>
+            <h3>Responses:</h3>
+            <p>Response 1: .</p>
+            <p>Response 2: aaaa.</p>
+            <p>Response 3: aaaa.</p>
+            <p>Reponse 4: </p>
+            <p>Response 5: I do dont not huh want</p>
+        </negative-example>
+    </crowd-instructions>
+    <!-- Your conversations and intents will be substituted for the "conversation" and "intent" variables when you 
+           publish a batch with an input file containing multiple conversations and intents -->
+
+
+    <p><strong>Conversation: </strong></p>
+    {% for turn in convos[0] %}
+		<p>{{ turn }}</p>
+	{% endfor %}
+    
+    <p><strong>You are responding as person {{ responder[0] }}</strong></p>
+    <p><strong>Possible Responses:</strong></p>
+    <crowd-input label="Response 1" name="response11" placeholder="Type one possible response here..." required></crowd-input>
+    <crowd-input label="Response 2" name="response12" placeholder="Type another, unique possible response here..." required></crowd-input>
+    <crowd-input label="Response 3" name="response13" placeholder="Type another, unique possible response here..."></crowd-input>
+    <crowd-input label="Response 4" name="response14" placeholder="Type another, unique possible response here..."></crowd-input>
+    <crowd-input label="Response 5" name="response15" placeholder="Type another, unique possible response here..."></crowd-input>
+
+    <p><strong>Conversation: </strong></p>
+    {% for turn in convos[1] %}
+		<p>{{ turn }}</p>
+	{% endfor %}
+    
+    <p><strong>You are responding as person {{ responder[1] }}</strong></p>
+    <p><strong>Possible Responses:</strong></p>
+    <crowd-input label="Response 1" name="response21" placeholder="Type one possible response here..." required></crowd-input>
+    <crowd-input label="Response 2" name="response22" placeholder="Type another, unique possible response here..." required></crowd-input>
+    <crowd-input label="Response 3" name="response23" placeholder="Type another, unique possible response here..."></crowd-input>
+    <crowd-input label="Response 4" name="response24" placeholder="Type another, unique possible response here..."></crowd-input>
+    <crowd-input label="Response 5" name="response25" placeholder="Type another, unique possible response here..."></crowd-input>
+
+    <p><strong>Conversation: </strong></p>
+    {% for turn in convos[2] %}
+		<p>{{ turn }}</p>
+	{% endfor %}
+    
+    <p><strong>You are responding as person {{ responder[2] }}</strong></p>
+    <p><strong>Possible Responses:</strong></p>
+    <crowd-input label="Response 1" name="response31" placeholder="Type one possible response here..." required></crowd-input>
+    <crowd-input label="Response 2" name="response32" placeholder="Type another, unique possible response here..." required></crowd-input>
+    <crowd-input label="Response 3" name="response33" placeholder="Type another, unique possible response here..."></crowd-input>
+    <crowd-input label="Response 4" name="response34" placeholder="Type another, unique possible response here..."></crowd-input>
+    <crowd-input label="Response 5" name="response35" placeholder="Type another, unique possible response here..."></crowd-input>
+
+    <p><strong>Conversation: </strong></p>
+    {% for turn in convos[3] %}
+		<p>{{ turn }}</p>
+	{% endfor %}
+    
+    <p><strong>You are responding as person {{ responder[3] }}</strong></p>
+    <p><strong>Possible Responses:</strong></p>
+    <crowd-input label="Response 1" name="response41" placeholder="Type one possible response here..." required></crowd-input>
+    <crowd-input label="Response 2" name="response42" placeholder="Type another, unique possible response here..." required></crowd-input>
+    <crowd-input label="Response 3" name="response43" placeholder="Type another, unique possible response here..."></crowd-input>
+    <crowd-input label="Response 4" name="response44" placeholder="Type another, unique possible response here..."></crowd-input>
+    <crowd-input label="Response 5" name="response45" placeholder="Type another, unique possible response here..."></crowd-input>
+
+    <p><strong>Conversation: </strong></p>
+    {% for turn in convos[4] %}
+		<p>{{ turn }}</p>
+	{% endfor %}
+    
+    <p><strong>You are responding as person {{ responder[4] }}</strong></p>
+    <p><strong>Possible Responses:</strong></p>
+    <crowd-input label="Response 1" name="response51" placeholder="Type one possible response here..." required></crowd-input>
+    <crowd-input label="Response 2" name="response52" placeholder="Type another, unique possible response here..." required></crowd-input>
+    <crowd-input label="Response 3" name="response53" placeholder="Type another, unique possible response here..."></crowd-input>
+    <crowd-input label="Response 4" name="response54" placeholder="Type another, unique possible response here..."></crowd-input>
+    <crowd-input label="Response 5" name="response55" placeholder="Type another, unique possible response here..."></crowd-input>
+
+    <p><strong>Conversation: </strong></p>
+    {% for turn in convos[5] %}
+		<p>{{ turn }}</p>
+	{% endfor %}
+    
+    <p><strong>You are responding as person {{ responder[5] }}</strong></p>
+    <p><strong>Possible Responses:</strong></p>
+    <crowd-input label="Response 1" name="response61" placeholder="Type one possible response here..." required></crowd-input>
+    <crowd-input label="Response 2" name="response62" placeholder="Type another, unique possible response here..." required></crowd-input>
+    <crowd-input label="Response 3" name="response63" placeholder="Type another, unique possible response here..."></crowd-input>
+    <crowd-input label="Response 4" name="response64" placeholder="Type another, unique possible response here..."></crowd-input>
+    <crowd-input label="Response 5" name="response65" placeholder="Type another, unique possible response here..."></crowd-input>
+
+    <p><strong>Conversation: </strong></p>
+    {% for turn in convos[6] %}
+		<p>{{ turn }}</p>
+	{% endfor %}
+    
+    <p><strong>You are responding as person {{ responder[6] }}</strong></p>
+    <p><strong>Possible Responses:</strong></p>
+    <crowd-input label="Response 1" name="response71" placeholder="Type one possible response here..." required></crowd-input>
+    <crowd-input label="Response 2" name="response72" placeholder="Type another, unique possible response here..." required></crowd-input>
+    <crowd-input label="Response 3" name="response73" placeholder="Type another, unique possible response here..."></crowd-input>
+    <crowd-input label="Response 4" name="response74" placeholder="Type another, unique possible response here..."></crowd-input>
+    <crowd-input label="Response 5" name="response75" placeholder="Type another, unique possible response here..."></crowd-input>
+
+    <p><strong>Conversation: </strong></p>
+    {% for turn in convos[7] %}
+		<p>{{ turn }}</p>
+	{% endfor %}
+    
+    <p><strong>You are responding as person {{ responder[7] }}</strong></p>
+    <p><strong>Possible Responses:</strong></p>
+    <crowd-input label="Response 1" name="response81" placeholder="Type one possible response here..." required></crowd-input>
+    <crowd-input label="Response 2" name="response82" placeholder="Type another, unique possible response here..." required></crowd-input>
+    <crowd-input label="Response 3" name="response83" placeholder="Type another, unique possible response here..."></crowd-input>
+    <crowd-input label="Response 4" name="response84" placeholder="Type another, unique possible response here..."></crowd-input>
+    <crowd-input label="Response 5" name="response85" placeholder="Type another, unique possible response here..."></crowd-input>
+
+    <p><strong>Conversation: </strong></p>
+    {% for turn in convos[8] %}
+		<p>{{ turn }}</p>
+	{% endfor %}
+    
+    <p><strong>You are responding as person {{ responder[8] }}</strong></p>
+    <p><strong>Possible Responses:</strong></p>
+    <crowd-input label="Response 1" name="response91" placeholder="Type one possible response here..." required></crowd-input>
+    <crowd-input label="Response 2" name="response92" placeholder="Type another, unique possible response here..." required></crowd-input>
+    <crowd-input label="Response 3" name="response93" placeholder="Type another, unique possible response here..."></crowd-input>
+    <crowd-input label="Response 4" name="response94" placeholder="Type another, unique possible response here..."></crowd-input>
+    <crowd-input label="Response 5" name="response95" placeholder="Type another, unique possible response here..."></crowd-input>
+
+    <p><strong>Conversation: </strong></p>
+    {% for turn in convos[9] %}
+		<p>{{ turn }}</p>
+	{% endfor %}
+    
+    <p><strong>You are responding as person {{ responder[9] }}</strong></p>
+    <p><strong>Possible Responses:</strong></p>
+    <crowd-input label="Response 1" name="response101" placeholder="Type one possible response here..." required></crowd-input>
+    <crowd-input label="Response 2" name="response102" placeholder="Type another, unique possible response here..." required></crowd-input>
+    <crowd-input label="Response 3" name="response103" placeholder="Type another, unique possible response here..."></crowd-input>
+    <crowd-input label="Response 4" name="response104" placeholder="Type another, unique possible response here..."></crowd-input>
+    <crowd-input label="Response 5" name="response105" placeholder="Type another, unique possible response here..."></crowd-input>
+
+
+</crowd-form>
+<!-- YOUR HTML ENDS -->
+]]>
+
+</HTMLContent>
+<FrameHeight>600</FrameHeight>
+</HTMLQuestion>
