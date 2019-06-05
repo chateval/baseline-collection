@@ -12,8 +12,7 @@ import sys
 
 
 def main(inputfile):
-  ''' Function to publish HITs for Collection Utterance on MTurk. Uses the HIT template found in templates/questions.xml.'''
-
+  ''' Function to publish HITs for Utterance Collection on MTurk. Uses the HIT template found in templates/questions.xml''' 
 
   MTURK_SANDBOX = 'https://mturk-requester-sandbox.us-east-1.amazonaws.com'
   mturk = boto3.client('mturk',
@@ -41,49 +40,49 @@ def main(inputfile):
   HITlinks = [] # keeps track of HIT links for analysis purposes
   HITIDs = [] # keeps track of HIT ids for analysis purposes 
 
-  allConversations = []
-  responders = []
+  allConversations = [] # list of lists of conversations. Each conversation is a list of the turns.
+  responders = [] # list of who the worker is acing as as the responder for each conversation. 
 
-  with open(inputfile,'r') as input:
-    for line in input:
+  with open(inputfile,'r') as input:      
+    for line in input:                      # this code formats the conversations into the style we want for the HIT
       dialog = line.split("</s>")
       for i in range(len(dialog)):
-        if i % 2 == 0:
+        if i % 2 == 0:                            
           dialog[i] = "A: {}".format(dialog[i])
         else:
-          dialog[i] = "B: {}".format(dialog[i])
+          dialog[i] = "B: {}".format(dialog[i])    
 
 
 
       responder = ""
 
-      if len(dialog) % 2 == 0:
+      if len(dialog) % 2 == 0:     # if there are #turn mod 2 = 0 turns in the convo, the worker is responding as person A
         responder = "A"
       else:
-        responder = "B"
+        responder = "B"            # otherwise the worker is responding as person B
 
       allConversations.append(dialog)
       responders.append(responder)
 
 
-  for i in range(0,len(allConversations),10):
+  for i in range(0,len(allConversations),10):       # HITs are created 10 conversations at a time. 
 
 
 
-    output = template.render(convos=allConversations[i:i+10],responder=responders[i:i+10])
+    output = template.render(convos=allConversations[i:i+10],responder=responders[i:i+10])    # fills the template with the conversations and responder info for the current HIT
 
-    with open('output.xml','w') as f:
-      print(output,file=f)
+    #with open('output.xml','w') as f:   #   If you want to look at the HIT before it is published
+      #print(output,file=f)
 
     task = open(file='output.xml',mode='r').read()
     new_hit = mturk.create_hit(
         Title = 'Response Collection',
-        Description = 'Provide at least two possible responses to ten given conversations. You may respond however you like but please provide at least two different responses.',
+        Description = 'Provide at least two possible responses to ten given conversations. You may respond however you like but please provide at least two different responses. Bonuses will be given for providing more than two responses.',
         Keywords = 'utterance, chat, language',
-        Reward = '0.05',
-        MaxAssignments = 5,
+        Reward = '0.25',
+        MaxAssignments = 3,
         LifetimeInSeconds = 604800,
-        AssignmentDurationInSeconds = 10800,
+        AssignmentDurationInSeconds = 600,
         AutoApprovalDelayInSeconds = 172800,
         Question = task,
     )
@@ -94,6 +93,8 @@ def main(inputfile):
     HITIDs.append(new_hit['HIT']['HITId'])
 
 
+  # Code below records the HIT batch link and each individual HITID in text files for result gathering and analysis purposes  
+
   with open(inputfile[0:len(inputfile)-4]+'HITIDs.txt','w') as f:
     for item in HITIDs:
       f.write("%s\n" % item)
@@ -102,7 +103,7 @@ def main(inputfile):
     for item in HITlinks:
       f.write("%s\n" % item)
 
-if __name__=="__main__":
+if __name__=="__main__":        # Arg 1 should be the text file containing the conversations with turns separated by </s>
   main(sys.argv[1])
 
 
