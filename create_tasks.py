@@ -12,7 +12,9 @@ import sys
 
 
 def main(inputfile):
-  ''' Function to publish HITs for Utterance Collection on MTurk'''
+  '''Function to publish HITs for Utterance Collection on MTurk
+  Arg inputfile: this input file is the data that you want to use for your HIT. For example for an utterance collection task, this file should contains conversations
+  separated by new lines, and turns within each conversation are separated by </s>'''
 
   MTURK_SANDBOX = 'https://mturk-requester-sandbox.us-east-1.amazonaws.com'
   mturk = boto3.client('mturk',
@@ -33,9 +35,9 @@ def main(inputfile):
   I updated the basic template to use out HTML stlye, which is found in another template HIT.html
   Plan for future is to use jinja to refactor and take out the actual text of HIT.html '''
 
-  fileloader = FileSystemLoader('templates')
-  env = Environment(loader=fileloader)
-  template = env.get_template("questions.xml") #
+  fileloader = FileSystemLoader('templates')      # Accesses the directory 'templates' in the same classpath as this code file. 'templates' contains files for HTML/XML templates
+  env = Environment(loader=fileloader)            # Establishes the environment to load a specific file from the templates diretory
+  template = env.get_template("questions.xml")    # 'questions.xml' is the basic template which will be filled in. Here we access it, and we fill it when we call render
 
   HITlinks = [] # keeps track of HIT links for analysis purposes
   HITIDs = [] # keeps track of HIT ids for analysis purposes 
@@ -86,7 +88,7 @@ def main(inputfile):
         AutoApprovalDelayInSeconds = 172800,
         QualificationRequirements = [
           { 'QualificationTypeId':'00000000000000000040', 'Comparator':'GreaterThanOrEqualTo', 'IntegerValues':[100], 'RequiredToPreview':True}, 
-          { 'QualificationTypeId':'000000000000000000L0', 'Comparator':'GreaterThan', 'IntegerValues':[97], 'RequiredToPreview':True},
+          { 'QualificationTypeId':'000000000000000000L0', 'Comparator':'GreaterThan', 'IntegerValues':[97],'RequiredToPreview':True},
           { 'QualificationTypeId':'00000000000000000071', 'Comparator':'EqualTo', 'LocaleValues':[{'Country':'US'}], 'RequiredToPreview':True}],
         Question = task,
     )
