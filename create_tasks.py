@@ -85,9 +85,9 @@ def main(inputfile):
         AssignmentDurationInSeconds = 600,
         AutoApprovalDelayInSeconds = 172800,
         QualificationRequirements = [
-          { 'QualificationTypeId':'00000000000000000040', 'Comparator':'GreaterThanOrEqualTo', 'IntegerValues':[100]}, 
-          { 'QualificationTypeId':'000000000000000000L0', 'Comparator':'GreaterThan', 'IntegerValues':[97]},
-          { 'QualificationTypeId':'00000000000000000071', 'Comparator':'EqualTo', 'LocaleValues':[{'Country':'US'}]}],
+          { 'QualificationTypeId':'00000000000000000040', 'Comparator':'GreaterThanOrEqualTo', 'IntegerValues':[100], 'RequiredToPreview':True}, 
+          { 'QualificationTypeId':'000000000000000000L0', 'Comparator':'GreaterThan', 'IntegerValues':[97], 'RequiredToPreview':True},
+          { 'QualificationTypeId':'00000000000000000071', 'Comparator':'EqualTo', 'LocaleValues':[{'Country':'US'}], 'RequiredToPreview':True}],
         Question = task,
     )
 
