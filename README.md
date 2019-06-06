@@ -15,7 +15,7 @@ Contains two files.
 
 ---
 
-The foundations for create_tasks.py, get_results.py, and questions.xml are courtesy of the tutorial from AWS found at: courtesy of the tutorial from aws at: https://blog.mturk.com/tutorial-a-beginners-guide-to-crowdsourcing-ml-training-data-with-python-and-mturk-d8df4bdf2977
+The foundations for create_tasks.py, get_results.py, and questions.xml are courtesy of the tutorial from AWS found at: https://blog.mturk.com/tutorial-a-beginners-guide-to-crowdsourcing-ml-training-data-with-python-and-mturk-d8df4bdf2977
 
 
 Any questions please contact: edcohen@seas.upenn.edu
