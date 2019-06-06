@@ -1,4 +1,4 @@
-baseline-collection
+Human Utterance Baseline Data Collection on Mechanical Turk
 =======
 
 Code to publish HITs on Mechanical Turk to collect human baselines for NLP tasks. A preview of the HITs can be found at: https://workersandbox.mturk.com/projects/3D3KZYB03KKA8YF604YHR2YT4EPV8B/tasks
