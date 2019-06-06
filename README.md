@@ -5,6 +5,8 @@ Code to publish HITs on Mechanical Turk to collect human baselines for NLP tasks
 
 ## create_tasks.py
 Contains the code for publishing HITs 
+## get_results.py
+Contains the code for checking the status of HITs published on Mechanical Turk, and retrieving the results for completed HITs. This code will be updated to store all of this information in a csv.
 ## templates
 Contains two files.
 
@@ -13,7 +15,7 @@ Contains two files.
 
 ---
 
-Both create_tasks.py and questions.xml are courtesy of the tutorial from AWS found at: courtesy of the tutorial from aws at: https://blog.mturk.com/tutorial-a-beginners-guide-to-crowdsourcing-ml-training-data-with-python-and-mturk-d8df4bdf2977
+The foundations for create_tasks.py, get_results.py, and questions.xml are courtesy of the tutorial from AWS found at: courtesy of the tutorial from aws at: https://blog.mturk.com/tutorial-a-beginners-guide-to-crowdsourcing-ml-training-data-with-python-and-mturk-d8df4bdf2977
 
 
 Any questions please contact: edcohen@seas.upenn.edu
