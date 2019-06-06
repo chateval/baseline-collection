@@ -12,7 +12,7 @@ import sys
 
 
 def main(inputfile):
-  ''' Function to publish HITs for Utterance Collection on MTurk. Uses the HIT template found in templates/questions.xml''' 
+  ''' Function to publish HITs for Utterance Collection on MTurk'''
 
   MTURK_SANDBOX = 'https://mturk-requester-sandbox.us-east-1.amazonaws.com'
   mturk = boto3.client('mturk',
@@ -71,21 +71,26 @@ def main(inputfile):
 
     output = template.render(convos=allConversations[i:i+10],responder=responders[i:i+10])    # fills the template with the conversations and responder info for the current HIT
 
-    #with open('output.xml','w') as f:   #   If you want to look at the HIT before it is published
-      #print(output,file=f)
+    with open('output.xml','w') as f:
+      print(output,file=f)
 
     task = open(file='output.xml',mode='r').read()
     new_hit = mturk.create_hit(
         Title = 'Response Collection',
-        Description = 'Provide at least two possible responses to ten given conversations. You may respond however you like but please provide at least two different responses. Bonuses will be given for providing more than two responses.',
+        Description = 'Provide at least two possible responses to ten given conversations. A one cent bonus will be given for every response provided outside of the two required for each conversation.',
         Keywords = 'utterance, chat, language',
         Reward = '0.25',
         MaxAssignments = 3,
         LifetimeInSeconds = 604800,
         AssignmentDurationInSeconds = 600,
         AutoApprovalDelayInSeconds = 172800,
+        QualificationRequirements = [
+          { 'QualificationTypeId':'00000000000000000040', 'Comparator':'GreaterThanOrEqualTo', 'IntegerValues':[100]}, 
+          { 'QualificationTypeId':'000000000000000000L0', 'Comparator':'GreaterThan', 'IntegerValues':[97]},
+          { 'QualificationTypeId':'00000000000000000071', 'Comparator':'EqualTo', 'LocaleValues':[{'Country':'US'}]}],
         Question = task,
     )
+
     print("A new HIT has been created. You can preview it here:")
     print("https://workersandbox.mturk.com/mturk/preview?groupId=" + new_hit['HIT']['HITGroupId'])
     print("HITID = " + new_hit['HIT']['HITId'] + " (Use to Get Results)")
