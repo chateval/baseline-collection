@@ -6,7 +6,7 @@ Code to publish HITs on Mechanical Turk to collect human baselines for NLP tasks
 ## create_tasks.py
 Contains the code for publishing HITs 
 ## get_results.py
-Contains the code for checking the status of HITs published on Mechanical Turk, and retrieving the results for completed HITs. This code will be updated to store all of this information in a csv.
+Contains the code for checking the status of HITs published on Mechanical Turk, and retrieving the results for completed HITs. This code will be updated to store all of this information in a csv. Update: program stores all the results in an output csv.
 ## templates
 Contains two files.
 
