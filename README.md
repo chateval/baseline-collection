@@ -7,6 +7,8 @@ Code to publish HITs on Mechanical Turk to collect human baselines for NLP tasks
 Contains the code for publishing HITs 
 ## get_results.py
 Contains the code for checking the status of HITs published on Mechanical Turk, and retrieving the results for completed HITs. This code will be updated to store all of this information in a csv. Update: program stores all the results in an output csv.
+## send_bonus.py
+Contains the code for sending a bonus to a worker for completing more work than required. 
 ## templates
 Contains two files.
 
