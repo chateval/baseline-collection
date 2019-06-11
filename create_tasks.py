@@ -9,6 +9,7 @@ Created on Thu May 30 15:44:02 2019
 from jinja2 import Environment, FileSystemLoader, Template
 import boto3
 import sys
+import csv
 
 
 def main(inputfile):
@@ -21,7 +22,7 @@ def main(inputfile):
      aws_access_key_id = "YOUR ACCESS KEY HERE",
      aws_secret_access_key = "YOUR SECRET ACCESS KEY HERE",
      region_name='us-east-1',
-     endpoint_url = MTURK_SANDBOX  # to access MTurk marketplace leave out endpoint_url completely
+     #endpoint_url = MTURK_SANDBOX  # to access MTurk marketplace leave out endpoint_url completely
   )
   # print("I have $" + mturk.get_account_balance()['AvailableBalance'] + " in my Sandbox account")
 
@@ -66,6 +67,9 @@ def main(inputfile):
       allConversations.append(dialog)
       responders.append(responder)
 
+  tracking_dict_keys = ['HITID', 'convo_1', 'convo_2', 'convo_3', 'convo_4', 'convo_5', 'convo_6', 'convo_7', 'convo_8', 'convo_9', 'convo_10']  # these keys will be used to map HITID -> conversations
+
+  tracking_dict_list = []                                                                                                                        # this list will contain the mapping for each HIT assignment
 
   for i in range(0,len(allConversations),10):       # HITs are created 10 conversations at a time. 
 
@@ -90,25 +94,37 @@ def main(inputfile):
           { 'QualificationTypeId':'00000000000000000040', 'Comparator':'GreaterThanOrEqualTo', 'IntegerValues':[100], 'RequiredToPreview':True}, 
           { 'QualificationTypeId':'000000000000000000L0', 'Comparator':'GreaterThan', 'IntegerValues':[97],'RequiredToPreview':True},
           { 'QualificationTypeId':'00000000000000000071', 'Comparator':'EqualTo', 'LocaleValues':[{'Country':'US'}], 'RequiredToPreview':True}],
-        Question = task,
+        Question = task
     )
 
     print("A new HIT has been created. You can preview it here:")
-    print("https://workersandbox.mturk.com/mturk/preview?groupId=" + new_hit['HIT']['HITGroupId'])
+    print("https://worker.mturk.com/mturk/preview?groupId=" + new_hit['HIT']['HITGroupId'])
     print("HITID = " + new_hit['HIT']['HITId'] + " (Use to Get Results)")
+
     HITlinks.append(new_hit['HIT']['HITGroupId'])
     HITIDs.append(new_hit['HIT']['HITId'])
+    tracking_dict = {'HITID':new_hit['HIT']['HITId'], 'convo_1':allConversations[i], 'convo_2':allConversations[i+1], 'convo_3':allConversations[i+2], 'convo_4':allConversations[i+3], 'convo_5':allConversations[i+4],
+    'convo_6':allConversations[i+5], 'convo_7':allConversations[i+6], 'convo_8':allConversations[i+7], 'convo_9':allConversations[i+8], 'convo_10':allConversations[i+9]}      # creates the tracking dictionary for the HIT assignment
+    tracking_dict_list.append(tracking_dict)                        # adds the dictionary to our trackng dictonary list 
 
 
-  # Code below records the HIT batch link and each individual HITID in text files for result gathering and analysis purposes  
 
-  with open(inputfile[0:len(inputfile)-4]+'HITIDs.txt','w') as f:
+
+  # Code below records the HIT batch link and each individual HITID in text files for result gathering and analysis purposes a
+  # Addition: code below also writes the csv that maps HITID -> conversations on the HIT
+
+  with open(inputfile[0:len(inputfile)-4]+'MarketHITIDs_2.txt','w') as f:
     for item in HITIDs:
       f.write("%s\n" % item)
 
-  with open(inputfile[0:len(inputfile)-4]+'HITlinks.txt','w') as f:
+  with open(inputfile[0:len(inputfile)-4]+'MarketHITlinks_2.txt','w') as f:
     for item in HITlinks:
       f.write("%s\n" % item)
+
+  with open(inputfile[0:len(inputfile)-4]+'HITTracking.csv','w') as f:              
+    wr = csv.DictWriter(f,tracking_dict_keys)
+    wr.writeheader()
+    wr.writerows(tracking_dict_list)
 
 if __name__=="__main__":        # Arg 1 should be the text file containing the conversations with turns separated by </s>
   main(sys.argv[1])
