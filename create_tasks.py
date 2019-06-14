@@ -88,7 +88,7 @@ def main(inputfile):
         Reward = '0.25',
         MaxAssignments = 3,
         LifetimeInSeconds = 604800,
-        AssignmentDurationInSeconds = 600,
+        AssignmentDurationInSeconds = 1800,
         AutoApprovalDelayInSeconds = 172800,
         QualificationRequirements = [
           { 'QualificationTypeId':'00000000000000000040', 'Comparator':'GreaterThanOrEqualTo', 'IntegerValues':[100], 'RequiredToPreview':True}, 
