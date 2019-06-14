@@ -5,15 +5,21 @@ Code to publish HITs on Mechanical Turk to collect human baselines for NLP tasks
 
 ## create_tasks.py
 Contains the code for publishing HITs 
-create_tasks takes four arguments:
-arg1: txt file containing the conversations to post as HITs. Conversations can be any number of turns and do not need to all be the same number.
-arg2: path to desired output txt file for tracking HITIDs (used to get results)
-arg3: path to desired output txt file for tracking HIT links (to preview a batch)
+create_tasks takes four arguments.
+
+arg1: txt file containing the conversations to post as HITs. Conversations can be any number of turns and do not need to all be the same number.  
+
+arg2: path to desired output txt file for tracking HITIDs (used to get results). 
+
+arg3: path to desired output txt file for tracking HIT links (to preview a batch). 
+
 arg4: path to desired output csv file for tracking HITID -> conversations on HIT.
 ## get_results.py
 Contains the code for checking the status of HITs published on Mechanical Turk, and retrieving the results for completed HITs. This code will be updated to store all of this information in a csv. Update: program stores all the results in an output csv.
 get_results takes two arguments:
+
 arg1: txt file containing the HITIDs to get results for.
+
 arg2: path of desired output csv file.
 ## scrape_convos.py
 Contains the code to scrape conversations to be used on MTurk from the following websites:
@@ -24,6 +30,7 @@ https://www.eslfast.com/easydialogs/index.html
 ## send_bonus.py
 Contains the code for sending a bonus to a worker for completing more work than required. 
 send_bonus requires 1 argument:
+
 arg1: the csv file to read results from. a csv outputted from get_results is formatted correctly for this.
 ## templates
 Contains two files.
