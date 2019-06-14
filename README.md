@@ -17,6 +17,10 @@ https://www.eslfast.com/easydialogs/index.html
 Contains the code for sending a bonus to a worker for completing more work than required. 
 ## templates
 Contains two files.
+## Results files
+Contain the results from 2_turn and 3_turn HITs published on Mechanical Turk. These will be updated frequently.
+## Tracking files
+Map the HITID for a MTurk run to the conversations that were used for that HIT.
 
 * **questions.xml** is the file containing the xml wrapper and the HTML for the HIT. 
 * **HIT.html** is a general template that is being developed for HITs. The goal is to have this template be pretty bare and it will be filled on based on the required task using Python and Jinja2. 
