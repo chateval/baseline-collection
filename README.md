@@ -15,6 +15,11 @@ Contains the code for fatigue analysis, Jaccard indexing, BLEU evaluation, and p
 ## BLEU_analysis
 Contains the csvs with BLEU evaluation data for our HITs.
 
+## fatigue_charts
+Contains images of the scatter plots with best fit line for the fatigue of workers as they complete a HIT.
+
+## analysis_charts
+Contains the charts for Jaccard indexing and BLEU evaluation analysis.
 
 ## create_tasks.py
 Contains the code for publishing HITs 
