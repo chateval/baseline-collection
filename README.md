@@ -3,6 +3,19 @@ Human Utterance Baseline Data Collection on Mechanical Turk
 
 Code to publish HITs on Mechanical Turk to collect human baselines for NLP tasks. A preview of the HITs can be found at: https://workersandbox.mturk.com/projects/3D3KZYB03KKA8YF604YHR2YT4EPV8B/tasks
 
+## data
+Contains the HIT results, jaccard analysis, and BLEU evaluation. 
+
+## coverage_HITs
+Contains all of the tracking information for the HITs that were published to guarantee we cover our dataset.
+
+## analysis_code
+Contains the code for fatigue analysis, Jaccard indexing, BLEU evaluation, and plotting the Jaccard and BLEU data to a histogram.
+
+## BLEU_analysis
+Contains the csvs with BLEU evaluation data for our HITs.
+
+
 ## create_tasks.py
 Contains the code for publishing HITs 
 create_tasks takes four arguments.
