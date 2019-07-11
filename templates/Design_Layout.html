@@ -1,0 +1,33 @@
+<!-- HIT template: Survey-v3.0 --><!-- The following snippet enables the 'responsive' behavior on smaller screens -->
+<meta content="width=device-width,initial-scale=1" name="viewport" />
+<section class="container" id="Survey"><!-- Instructions -->
+<div class="row">
+<div class="col-xs-12 col-md-12">
+<div class="panel-body" id="instructionBody">
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<!-- You must include crowd-form so that your task submits answers to MTurk -->
+<crowd-form answer-format="flatten-objects">
+<!-- End Instructions --><!-- Survey Layout -->
+
+<div class="row" id="workContent" name= {{conversations[0].bot}} >
+<div class="col-sm-8 col-sm-offset-2">
+<p style="margin-bottom: 15px; font-size: 16px; line-height: 1.72222; color: rgb(52, 73, 94); font-family: Lato, Helvetica, Arial, sans-serif;"><span style="color: rgb(209, 72, 65);">The result may not be approved if it is considered as cheating by checking utterances which consist of Obviously BREAKDOWN and NOT A BREAKDOWN utterances. </span></p>
+{% for convo in conversations %}
+    <div class="panel panel-default">
+    <div class="panel-body"><label><font color = "black">Read the text below paying close attention to detail, especially to the last utterance:</label>
+
+    <p class="well">{{ convo.content }} </p>
+    Select one of the breakdown labels. (required)
+
+    <div class="radio"><label><input name="{{ convo.annotationid }}" required="true" type="radio" value="NOT BREAKDOWN" /><font color = "green">NOT A BREAKDOWN </label></div>
+
+    <div class="radio"><label><input name="{{ convo.annotationid }}" required="true" type="radio" value="POSSIBLE BREAKDOWN" /><font color = "#ffbf00">POSSIBLE BREAKDOWN </label></div>
+
+    <div class="radio"><label><input name="{{ convo.annotationid }}" required="true" type="radio" value="BREAKDOWN" /><font color = "red">BREAKDOWN </label></div>
+    </div>
+    </div>
+    <br>
+{% endfor %}
+</div>
+</div>
