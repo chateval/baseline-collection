@@ -1,32 +1,35 @@
-from jaccard_index.jaccard import jaccard_index
-import csv
 import sys
+import nltk
+import csv
+import itertools
 import statistics
 import random
-import itertools
+from nltk.util import ngrams
+from nltk.translate import bleu_score
+from nltk.translate.bleu_score import SmoothingFunction
 
-
-def main(inputfile, outputfile, promptsfile):
-    ''' Code to do analysis on the jaccard indices for HITs from MTurk
-        Inputfile is the analysis file from get_results.py to be used for analysis
-        num_conversations is the number of times each HIT was assigned for this batch
-        Outputfile is the desired .csv file to print the results to'''
-
-    dict_keys = ["WorkerId","HITId"]
+def main(inputfile,outputfile, promptsfile):
+    '''Gets BLEU sentence scores for responses
+       Inputfile is the file produced by get_results.py
+       Outpufile is the desired csv to print to
+       Records BLEU scores as (min, max, median, standard deviation, number of responses)
+       For HIT scores the HIT Id is recorded in both WorkerId and HITId for formattting purposes
+       Currently using no smoothing'''
+    
+    dict_keys = ["WorkerId", "HITId"]
     for i in range(1,11):
         dict_keys.extend(["prompt_{}".format(i), "prompt_{}_mean".format(i),"prompt_{}_median".format(i), "prompt_{}_min".format(i), "prompt_{}_max".format(i), 
-            "prompt_{}_std".format(i), "prompt_{}_num_responses".format(i), "prompt_{}_responses".format(i), "prompt_{}_allJaccard".format(i), "prompt_{}_self_mean".format(i), "prompt_{}_self_median".format(i), "prompt_{}_self_min".format(i), "prompt_{}_self_max".format(i),
-            "prompt_{}_self_std".format(i), "prompt_{}_self_num_responses".format(i), "prompt_{}_selfJaccard".format(i)])
-
+            "prompt_{}_std".format(i), "prompt_{}_num_responses".format(i), "prompt_{}_responses".format(i), "prompt_{}_allBLEU".format(i), "prompt_{}_self_mean".format(i), "prompt_{}_self_median".format(i), "prompt_{}_self_min".format(i), "prompt_{}_self_max".format(i),
+            "prompt_{}_self_std".format(i), "prompt_{}_self_num_responses".format(i), "prompt_{}_selfBLEU".format(i)])
 
     dict_keys.extend(["prompt_{}".format(i) for i in range(1,11)])
-    HIT_dict_list = []
+    chencherry = SmoothingFunction()
 
     rows = []
     with open(inputfile, 'r') as input:
         reader = csv.reader(input)
         header = next(reader)
-        rows = [row for row in reader]
+        rows.extend([row for row in reader])
 
     prompt_start = header.index("response11")
     prompt_end = header.index("response105")+1
@@ -45,54 +48,51 @@ def main(inputfile, outputfile, promptsfile):
 
         HIT_dict = {"WorkerId":group[0],"HITId":HITId}   # instantiates a dictionary for each HIT that contains the HITId recorded twice, as the WorkerId and as the HITId. This is done for formatting the output csv
         workers = [worker for worker in group[1]]   # instantiates the list of workers who completed assignments for this HIT
-
-        for i in range(prompt_start,prompt_end,5): # goes through all five responses for each prompt and then moves on 
-
-            HIT_Jaccard = []
-            HIT_selfJaccard = []
+        
+        for i in range(prompt_start,prompt_end,5): # 9 to 59 by 5 based on the csv outputted by get_results.py ****THIS SHOULD BE UPDATED TO BE FLEXIBLE BASED ON THE FIRST INDEX OF 'prompt_1' and last index of 'prompt_10'*****
+            
+            HIT_BLEU = []
+            HIT_selfBLEU = []
             responses = [(worker[1],response) for worker in workers for response in worker[i:i+5] if response!="NA" and response!="." and response!=""]    # instantiates a list of tuple of the form (WorkerId,responses) recording the responses provided by each worker for this HIT
-            prompt = "prompt_{}_allJaccard".format(int((i)/5)) # key where we store Jaccard scores against all responses
-            self_prompt = "prompt_{}_selfJaccard".format(int((i)/5))   # key where we store Jaccard scores for a worker against himself
+            prompt = "prompt_{}_allBLEU".format(int((i)/5)) # key where we store BLEU scores against all responses
+            self_prompt = "prompt_{}_selfBLEU".format(int((i)/5))   # key where we store BLEU scores for a worker against himself
             num_responses = len(responses)
 
-            for response in responses:  # loop through each response in our instantiated list to get the Jaccard score for that response
+            for response in responses:  # loop through each response in our instantiated list to get the BLEU score for that response
                 
                 worker = response[0]    # get the WorkerId of the worker who provided this response 
                 proposed_response = response[1] # get the response that we are looking at specifically
                 workerHIT_dict = dict_dict[(worker,HITId)]   # retrieve the worker's dictionary
-                wo_response = [resp[1] for resp in responses if resp!=response] # instantiates a list of all of the responses to this HIT except for the response we are calculating the Jaccard score for
+                wo_response = [resp[1] for resp in responses if resp!=response] # instantiates a list of all of the responses to this HIT except for the response we are calculating the BLEU score for
                 worker_responses = [resp[1] for resp in responses if resp!=response and resp[0]==worker] # instantiates a list of all of the other responses to this HIT for this prompt provided by the worker who gave the response we are looking at
-                response_Jaccard = []
-                self_Jaccard = []
-
+                response_BLEU = []
+                self_BLEU = []
+                
+                # bootstrapping method to compare the response to a random sample with replacement of seven of the other responses, not including this response, to the prompt. also do bootstrap for self BLEU score 
                 for j in range(10):
-
-                    bootstrap_responses = random.sample(wo_response, 7) # randomly gets either 5 or 7 of the responses to the prompt, not including current response. must be set manually based on which set is being used
-                    response_Jaccard.append(jaccard_similarity(proposed_response,bootstrap_responses))
-
-                    self_bootstrap_response = random.sample(worker_responses, 1)    # randomly gets one of this workers' other responses to the prompt to get the Jaccard aganst 
-                    try:
-                        self_jaccard = jaccard_index(response, self_bootstrap_response[0])
-                    except:
-                        print("No n-grams found. Appending zero for these two")
-                        self_jaccard = 0  
                     
-                    self_Jaccard.append(self_jaccard)    
+                    bootstrap_responses = random.sample(wo_response, 7) # randomly gets either 5 or 7 of the responses to the prompt, not including current response. must be set manually based on which set is being used
+                    bleu = bleu_score.sentence_bleu(bootstrap_responses,proposed_response,smoothing_function=chencherry.method0)  # gets the BLEU score for this response compared to all of the other responses for this HIT, using chencherry method 0
+                    response_BLEU.append(bleu)
 
-                response_mean = statistics.mean(response_Jaccard)
-                self_mean = statistics.mean(self_Jaccard)
-                if prompt in workerHIT_dict.keys(): # checks if this is not the first time we are writing a Jaccard score for this HIT and prompt for this worker
+                    self_bootstrap_response = random.sample(worker_responses, 1)    # randomly gets one of this workers' other responses to the prompt to get the BLEU aganst 
+                    self_bleu = bleu_score.sentence_bleu(self_bootstrap_response,proposed_response,smoothing_function=chencherry.method0)  
+                    self_BLEU.append(self_bleu)                
+
+                response_mean = statistics.mean(response_BLEU)
+                self_mean = statistics.mean(self_BLEU)
+                if prompt in workerHIT_dict.keys(): # checks if this is not the first time we are writing a BLEU score for this HIT and prompt for this worker
                     workerHIT_dict[prompt].append(response_mean)
                     workerHIT_dict[self_prompt].append(self_mean)
                 else:
                     workerHIT_dict[prompt] = [response_mean]
                     workerHIT_dict[self_prompt] = [self_mean]
                 
-                HIT_Jaccard.append(response_mean)   # records the Jaccard score which will be used for the average Jaccard for this HIT for this prompt
-                HIT_selfJaccard.append(self_Jaccard)
+                HIT_BLEU.append(response_mean)   # records the bleu score which will be used for the average BLEU for this HIT for this prompt
+                HIT_selfBLEU.append(self_bleu)
 
-            HIT_dict[prompt] = HIT_Jaccard # sets the entry in the dicionary for  this HIT for this prompt to be the list of Jaccard scores
-            HIT_dict[self_prompt] = HIT_selfJaccard
+            HIT_dict[prompt] = HIT_BLEU # sets the entry in the dicionary for  this HIT for this prompt to be the list of BLEU scores
+            HIT_dict[self_prompt] = HIT_selfBLEU
             #HIT_dict["prompt_{}_responses".format(int((i)/5))] = HIT_responses
         dict_dict[HITId] = HIT_dict     # updates that the HIT_dict is the dictionary we wish to use in our dictionary of dicionaries
 
@@ -106,10 +106,10 @@ def main(inputfile, outputfile, promptsfile):
     for workerHIT_dict in dict_list:    # for each dictionary in our dictionary we are going to set the statistics accordingly 
         for i in range(1,11):
             
-            prompt = "prompt_{}_allJaccard".format(i)  # we do this for each prompt 1-10
-            self_prompt = "prompt_{}_selfJaccard".format(i)
+            prompt = "prompt_{}_allBLEU".format(i)  # we do this for each prompt 1-10
+            self_prompt = "prompt_{}_selfBLEU".format(i)
             
-            try:    # tries to set the Worker or HIT dictionary (demarked by their Ids) to contain the median Jaccard for a HIT and prompt, the min, the max, the std, and the number of responses. As well as records what the actual prompt was from prompt_rows which was created earlier 
+            try:    # tries to set the Worker or HIT dictionary (demarked by their Ids) to contain the median BLEU for a HIT and prompt, the min, the max, the std, and the number of responses. As well as records what the actual prompt was from prompt_rows which was created earlier 
                 workerHIT_dict["prompt_{}_mean".format(i)] = statistics.mean(workerHIT_dict[prompt])
                 workerHIT_dict["prompt_{}_median".format(i)] = statistics.median(workerHIT_dict[prompt])
                 workerHIT_dict["prompt_{}_min".format(i)] = min(workerHIT_dict[prompt])
@@ -132,34 +132,5 @@ def main(inputfile, outputfile, promptsfile):
         wr.writeheader()
         wr.writerows(dict_list)
 
-def jaccard_similarity(proposed_response, gt_responses):
-    ''' Computes the mean jaccard index for the jaccard indices of proposed response against each of the gt-responses
-        Returns the mean jaccard index'''
-
-    jaccard_indices = []
-    for response in gt_responses:
-        try:
-            jaccard_indices.append(jaccard_index(proposed_response,response))
-        except:
-            print("No n-grams found. Appending zero for these two")
-            jaccard_indices.append(0)
-    return statistics.mean(jaccard_indices)
-
-# def jaccard_single_worker(list1):
-
-#     jaccard_indices = []
-#     for i in range(0,len(list1)):
-#         for j in range(i+1,len(list1)):
-#             s1 = list1[i]
-#             s2 = list1[j]
-#             if s1!="NA" and s1!="." and s1!="" and s2!="NA" and s2!="." and s2!="":
-#                 try:
-#                     jaccard_indices.append(jaccard_index(s1,s2))
-#                 except:
-#                     print("No n-grams found. Appending zero for these two")
-#                     jaccard_indices.append(0)
-#     return jaccard_indices   
-   
-
 if __name__=="__main__":
-    main(sys.argv[1], sys.argv[2], sys.argv[3])
+    main(sys.argv[1],sys.argv[2], sys.argv[3])
